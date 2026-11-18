@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <base target="_top">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+    <!-- TIPOGRAFÍAS OFICIALES BRANDBOOK: POPPINS (Primaria) + ROBOTO (Funcional) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;900&family=Roboto:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+
+      body {
+        font-family: 'Roboto', sans-serif;
+        /* Gradiente institucional Brandbook: #3271ed -> #c429cc */
+        background: linear-gradient(135deg, #3271ed 0%, #c429cc 100%);
+        min-height: 100vh;
+        color: #ffffff;
+        padding: 20px 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      /* ENCABEZADO CON LOGO PNG TRANSPARENTE SOBRE NEGRO INSTITUCIONAL (#0e0f11) */
+      .header {
+        text-align: center;
+        margin-bottom: 18px;
+      }
+
+      .logo-container {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #0e0f11;
+        padding: 16px 28px;
+        border-radius: 14px;
+        box-shadow: 0 8px 24px rgba(14, 15, 17, 0.3);
+      }
+
+      .logo-png {
+        height: 36px;
+        width: auto;
+        display: block;
+        background: transparent;
+        border: none;
+      }
+
+      .logo-fallback {
+        display: none;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 900;
+        font-size: 38px;
+        line-height: 1;
+        letter-spacing: -1.8px;
+        color: #ffffff;
+      }
+
+      .logo-fallback span {
+        color: #3271ed;
+      }
+
+      .subtitle {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 500;
+        font-size: 13.5px;
+        color: #f2f2f2;
+        margin-top: 10px;
+        letter-spacing: 0.2px;
+      }
+
+      .top-controls {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-width: 950px;
+      }
+
+      .time-selector-card {
+        background: rgba(14, 15, 17, 0.28);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(242, 242, 242, 0.25);
+        border-radius: 12px;
+        padding: 8px 14px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        box-shadow: 0 4px 16px rgba(14, 15, 17, 0.2);
+      }
+
+      .time-selector-card label {
+        font-family: 'Poppins', sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .time-selector-card input, .time-selector-card select {
+        padding: 6px 8px;
+        border-radius: 6px;
+        border: 1px solid #b7cbea;
+        background: #f2f2f2;
+        font-family: 'Roboto', sans-serif;
+        font-size: 13px;
+        color: #0e0f11;
+        outline: none;
+      }
+
+      .btn-top {
+        background: #f2f2f2;
+        color: #0e0f11;
+        border: none;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 12.5px;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 4px 15px rgba(14, 15, 17, 0.2);
+        transition: transform 0.2s, background 0.2s;
+      }
+
+      .btn-top:hover { transform: translateY(-2px); background: #ffffff; }
+
+      .legend {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 15px;
+        background: rgba(14, 15, 17, 0.25);
+        backdrop-filter: blur(10px);
+        padding: 6px 16px;
+        border-radius: 20px;
+        border: 1px solid rgba(242, 242, 242, 0.2);
+      }
+
+      .legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; }
+      .dot { width: 10px; height: 10px; border-radius: 50%; }
+      .dot.available { background-color: #2bccb1; }
+      .dot.occupied { background-color: #ff5c77; }
+
+      .grid-salas {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 10px;
+        width: 100%;
+        max-width: 950px;
+        margin-bottom: 25px;
+      }
+
+      .sala-card {
+        border-radius: 12px;
+        padding: 14px 12px;
+        color: #ffffff;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        min-height: 140px;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 4px 16px rgba(14, 15, 17, 0.2);
+        border: 1px solid rgba(242, 242, 242, 0.22);
+      }
+
+      .sala-card.disponible {
+        background: rgba(43, 204, 177, 0.22);
+        border-left: 4px solid #2bccb1;
+      }
+
+      .sala-card.reservada {
+        background: rgba(14, 15, 17, 0.45) !important;
+        border-left: 4px solid #ff5c77 !important;
+      }
+
+      .sala-title {
+        font-family: 'Poppins', sans-serif;
+        font-size: 16px;
+        font-weight: 700;
+        border-bottom: 1px solid rgba(242, 242, 242, 0.2);
+        padding-bottom: 6px;
+      }
+
+      .sala-info { font-size: 12px; margin: 8px 0; line-height: 1.35; }
+      .sala-info .label-ocupada {
+        font-family: 'Poppins', sans-serif;
+        font-size: 10px;
+        text-transform: uppercase;
+        color: #ff8fa3;
+        font-weight: 600;
+        display: block;
+      }
+
+      .btn-action {
+        background: rgba(242, 242, 242, 0.18);
+        border: 1px solid rgba(242, 242, 242, 0.4);
+        color: #ffffff;
+        padding: 7px;
+        border-radius: 6px;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 12px;
+        cursor: pointer;
+        width: 100%;
+        transition: background 0.2s;
+      }
+
+      .btn-action:hover { background: rgba(242, 242, 242, 0.3); }
+
+      .calendar-section {
+        width: 100%;
+        max-width: 950px;
+        background: rgba(14, 15, 17, 0.25);
+        backdrop-filter: blur(16px);
+        border: 1px solid rgba(242, 242, 242, 0.25);
+        border-radius: 16px;
+        padding: 14px;
+        box-shadow: 0 8px 30px rgba(14, 15, 17, 0.25);
+      }
+
+      .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        gap: 8px;
+      }
+
+      .calendar-header h2 {
+        font-family: 'Poppins', sans-serif;
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .view-toggle { display: flex; background: rgba(14, 15, 17, 0.35); border-radius: 6px; padding: 2px; }
+      .view-btn {
+        background: transparent;
+        border: none;
+        color: #f2f2f2;
+        padding: 4px 10px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 500;
+        font-size: 12px;
+      }
+      .view-btn.active { background: #f2f2f2; color: #0e0f11; font-weight: 600; }
+
+      .timeline-table-container {
+        overflow-x: auto;
+        max-height: 420px;
+        overflow-y: auto;
+        border-radius: 8px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      .timeline-table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+      }
+
+      .timeline-table th {
+        position: sticky; top: 0;
+        background: #0e0f11;
+        color: #f2f2f2;
+        font-family: 'Poppins', sans-serif;
+        padding: 7px 2px;
+        font-size: 11px;
+        font-weight: 600;
+        text-transform: uppercase;
+        border: 1px solid rgba(242, 242, 242, 0.15);
+        z-index: 5;
+        text-align: center;
+      }
+
+      .timeline-table th:first-child { width: 55px; }
+
+      .timeline-table td {
+        border: 1px solid rgba(242, 242, 242, 0.1);
+        padding: 1px;
+        text-align: center;
+        height: 24px;
+        font-size: 10px;
+        vertical-align: middle;
+      }
+
+      .timeline-slot { background: rgba(242, 242, 242, 0.03); }
+
+      .hora-col {
+        font-weight: 700;
+        font-size: 10px;
+        color: #f2f2f2;
+        background: rgba(14, 15, 17, 0.3);
+      }
+
+      .event-card-single {
+        background: #0e0f11;
+        border-left: 3px solid #3271ed;
+        color: #ffffff;
+        border-radius: 4px;
+        padding: 4px 2px;
+        font-size: 10px;
+        font-weight: 700;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        width: 100%;
+        box-shadow: 0 2px 4px rgba(14, 15, 17, 0.35);
+        line-height: 1.2;
+      }
+
+      .event-card-single small {
+        font-size: 8px;
+        font-weight: 400;
+        color: #b7cbea;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(14, 15, 17, 0.7);
+        backdrop-filter: blur(4px);
+        justify-content: center;
+        align-items: center;
+        z-index: 100;
+      }
+
+      .modal-content {
+        background: #f2f2f2;
+        color: #0e0f11;
+        padding: 22px;
+        border-radius: 14px;
+        width: 370px;
+        max-width: 95%;
+        max-height: 92vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 25px -5px rgba(14, 15, 17, 0.4);
+      }
+
+      .modal-content h3 {
+        font-family: 'Poppins', sans-serif;
+        font-weight: 700;
+        margin-bottom: 14px;
+        font-size: 17px;
+        color: #0e0f11;
+      }
+
+      .resumen-list { max-height: 280px; overflow-y: auto; margin-bottom: 15px; }
+
+      .resumen-linea {
+        padding: 8px 0;
+        border-bottom: 1px solid #d1d5db;
+        font-size: 13px;
+        color: #0e0f11;
+      }
+
+      .form-group { margin-bottom: 10px; text-align: left; }
+      .form-group label {
+        display: block;
+        font-family: 'Poppins', sans-serif;
+        font-size: 11px;
+        font-weight: 600;
+        color: #193760;
+        margin-bottom: 3px;
+        text-transform: uppercase;
+      }
+      .modal-content input, .modal-content select, .modal-content textarea {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #b7cbea;
+        background: #ffffff;
+        color: #0e0f11;
+        border-radius: 6px;
+        font-family: 'Roboto', sans-serif;
+        font-size: 13px;
+      }
+
+      .chips { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 4px; }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        background: #b7cbea;
+        color: #0e0f11;
+        border: 1px solid #3271ed;
+        border-radius: 999px;
+        padding: 3px 6px 3px 10px;
+        font-size: 12px;
+        font-weight: 500;
+      }
+      .chip button {
+        border: none;
+        background: transparent;
+        color: #0e0f11;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1;
+        padding: 0 4px;
+        width: auto;
+      }
+
+      .disp-actions { display: flex; gap: 8px; margin-top: 6px; }
+      .btn-disp {
+        flex: 1;
+        background: #ffffff;
+        color: #3271ed;
+        border: 1px solid #3271ed;
+        padding: 7px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 12px;
+        text-align: center;
+        text-decoration: none;
+      }
+      #panelCalendarios { display: none; margin-top: 8px; }
+      #frameCalendarios { width: 100%; height: 300px; border: 1px solid #b7cbea; border-radius: 8px; background: #ffffff; }
+      #linkCalendarios { display: inline-block; margin-top: 4px; font-size: 11px; color: #3271ed; font-weight: 500; }
+
+      .modal-buttons { display: flex; gap: 8px; margin-top: 15px; }
+      .btn-cancel {
+        flex: 1;
+        background: #e5e7eb;
+        color: #0e0f11;
+        border: none;
+        padding: 9px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 12px;
+      }
+      .btn-confirm {
+        flex: 1;
+        background: #3271ed;
+        color: #ffffff;
+        border: none;
+        padding: 9px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: 'Poppins', sans-serif;
+        font-weight: 600;
+        font-size: 12px;
+      }
+      .btn-confirm:hover { background: #193760; }
+    </style>
+  </head>
+  <body>
+
+    <!-- LOGO PNG TRANSPARENTE OFICIAL (SIN FONDO BLANCO) -->
+    <div class="header">
+      <div class="logo-container">
+        <img
+          src="https://raw.githubusercontent.com/TU-USUARIO/TU-REPOSITORIO/main/logo-blanco-sin-bajada.png"
+          alt="main."
+          class="logo-png"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-block';"
+        >
+        <div class="logo-fallback">main<span>.</span></div>
+      </div>
+      <div class="subtitle">Consulta y Reserva de Salas</div>
+    </div>
+
+    <div class="top-controls">
+      <div class="time-selector-card">
+        <div>
+          <label>Fecha:</label>
+          <input type="date" id="fechaConsulta" onchange="alCambiarFechaOHora()">
+        </div>
+        <div>
+          <label>Hora:</label>
+          <select id="horaConsulta" onchange="alCambiarFechaOHora()"></select>
+        </div>
+      </div>
+
+      <button class="btn-top" onclick="abrirResumen()">📋 Resumen</button>
+
+      <a href="https://calendar.google.com/calendar/u/0?cid=Y184NTJmNTBmNWFiMmMyYjA5NmJlMmY5Nzg0NDJmZDIyZThkMTlmOWY3NzA1ZWU4N2JlNGFiZDRlZjA5YWU0NDAxQGdyb3VwLmNhbGVuZGFyLmdvb2dsZS5jb20" target="_blank" class="btn-top">
+        📅 Agregar Calendario
+      </a>
+    </div>
+
+    <div class="legend">
+      <div class="legend-item"><div class="dot available"></div> Disponible</div>
+      <div class="legend-item"><div class="dot occupied"></div> Ocupada</div>
+    </div>
+
+    <div class="grid-salas" id="gridSalas">
+      <p style="text-align: center; grid-column: 1/-1;">Cargando estado...</p>
+    </div>
+
+    <div class="calendar-section">
+      <div class="calendar-header">
+        <h2>🗓️ Ocupación (10:00 - 18:30)</h2>
+        <div class="view-toggle">
+          <button class="view-btn active" id="btnVistaDia" onclick="cambiarVistaCalendario('dia')">Día</button>
+          <button class="view-btn" id="btnVistaSemana" onclick="cambiarVistaCalendario('semana')">Semana</button>
+        </div>
+      </div>
+
+      <div class="timeline-table-container" id="timelineContainer">
+        <p style="text-align: center;">Cargando calendario...</p>
+      </div>
+    </div>
+
+    <div class="modal" id="modalResumen">
+      <div class="modal-content">
+        <h3 id="resumenTitulo">Resumen de Reservas</h3>
+        <div class="resumen-list" id="resumenContenido">
+          <p>Cargando reservas...</p>
+        </div>
+        <button class="btn-cancel" style="width: 100%;" onclick="cerrarResumen()">Cerrar</button>
+      </div>
+    </div>
+
+    <div class="modal" id="modalReserva">
+      <div class="modal-content">
+        <h3 id="modalTitulo">Reservar Sala</h3>
+
+        <div class="form-group">
+          <label>Nombre y Apellido *</label>
+          <input type="text" id="nombrePersona" placeholder="ej. Carlos Gómez">
+        </div>
+
+        <div class="form-group">
+          <label>Email *</label>
+          <input type="email" id="emailUsuario" list="listaPersonas" autocomplete="off" placeholder="Buscá tu nombre o mail">
+          <datalist id="listaPersonas"></datalist>
+        </div>
+
+        <div class="form-group">
+          <label>Invitados al Meet (opcional)</label>
+          <div id="chipsInvitados" class="chips"></div>
+          <input type="text" id="invitadoInput" list="listaPersonas" autocomplete="off" placeholder="Buscá por nombre o mail y tocá Enter">
+          <input type="hidden" id="invitadosExtra">
+          <div class="disp-actions">
+            <button type="button" class="btn-disp" id="btnCalendarios" onclick="toggleCalendarios()">Ver calendarios</button>
+          </div>
+          <div id="panelCalendarios">
+            <iframe id="frameCalendarios" title="Calendarios del equipo"></iframe>
+            <a id="linkCalendarios" target="_blank" rel="noopener">Abrir en pestaña nueva</a>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Motivo / Descripción *</label>
+          <textarea id="motivoReserva" placeholder="ej. Presentación"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Duración</label>
+          <select id="duracionReserva">
+            <option value="15">15 minutos</option>
+            <option value="30" selected>30 minutos</option>
+            <option value="60">1 hora</option>
+            <option value="90">1 hora y media</option>
+            <option value="120">2 horas</option>
+          </select>
+        </div>
+
+        <div class="modal-buttons">
+          <button class="btn-cancel" onclick="cerrarModal()">Cancelar</button>
+          <button class="btn-confirm" id="btnConfirmar" onclick="confirmarReserva()">Confirmar</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const SALAS_CALENDAR_ID = 'c_852f50f5ab2c2b096be2f978442fd22e8d19f9f7705ee87be4abd4ef09ae4401@group.calendar.google.com';
+      let salaSeleccionada = '';
+      let vistaCalendarioActual = 'dia';
+
+      window.onload = function() {
+        inicializarControlesHorario();
+        alCambiarFechaOHora();
+        cargarDirectorio();
+        inicializarEventosInvitados();
+      };
+
+      function inicializarControlesHorario() {
+        const inputFecha = document.getElementById('fechaConsulta');
+        const selectHora = document.getElementById('horaConsulta');
+        selectHora.innerHTML = '';
+
+        const ahora = new Date();
+        const yyyy = ahora.getFullYear();
+        const mm = String(ahora.getMonth() + 1).padStart(2, '0');
+        const dd = String(ahora.getDate()).padStart(2, '0');
+        inputFecha.value = `${yyyy}-${mm}-${dd}`;
+
+        const horaActual = ahora.getHours();
+        const minActual = ahora.getMinutes();
+
+        for (let h = 8; h <= 20; h++) {
+          for (let m of ['00', '15', '30', '45']) {
+            if (h === 20 && m !== '00') break;
+            let horaStr = (h < 10 ? '0' + h : h) + ':' + m;
+            let option = document.createElement('option');
+            option.value = horaStr;
+            option.textContent = horaStr + ' hs';
+
+            let minNum = parseInt(m);
+            if (h === horaActual && minActual >= minNum && minActual < minNum + 15) {
+              option.selected = true;
+            }
+
+            selectHora.appendChild(option);
+          }
+        }
+      }
+
+      function alCambiarFechaOHora() {
+        consultarEstadoSalas();
+        cargarCalendarioTimeline();
+      }
+
+      function consultarEstadoSalas() {
+        const fecha = document.getElementById('fechaConsulta').value;
+        const hora = document.getElementById('horaConsulta').value;
+
+        google.script.run
+          .withSuccessHandler(renderizarSalas)
+          .obtenerEstadoSalasPorHora(fecha, hora);
+      }
+
+      function renderizarSalas(data) {
+        const grid = document.getElementById('gridSalas');
+        grid.innerHTML = '';
+
+        for (const [sala, info] of Object.entries(data)) {
+          const card = document.createElement('div');
+          card.className = `sala-card ${info.reservada ? 'reservada' : 'disponible'}`;
+
+          let contenidoInfo = info.reservada
+            ? `<div class="sala-info">
+                 <span class="label-ocupada">Ocupada:</span>
+                 <strong>${info.nombre}</strong>
+                 <small style="margin-top: 4px; display: block; opacity: 0.9;">${info.horario}</small>
+               </div>
+               <button class="btn-action" onclick="liberar('${sala}')">Liberar</button>`
+            : `<div class="sala-info"><p>Disponible.</p></div>
+               <button class="btn-action" onclick="abrirModal('${sala}')">Reservar</button>`;
+
+          card.innerHTML = `
+            <div class="sala-title">${sala}</div>
+            ${contenidoInfo}
+          `;
+
+          grid.appendChild(card);
+        }
+      }
+
+      function abrirResumen() {
+        const fecha = document.getElementById('fechaConsulta').value;
+        document.getElementById('resumenTitulo').innerText = `Resumen (${fecha})`;
+        document.getElementById('modalResumen').style.display = 'flex';
+
+        const cont = document.getElementById('resumenContenido');
+        cont.innerHTML = '<p style="text-align:center;">Cargando...</p>';
+
+        google.script.run
+          .withSuccessHandler(function(reservas) {
+            if (!reservas || reservas.length === 0) {
+              cont.innerHTML = '<p style="text-align:center; color:#193760; padding:15px;">No hay reservas.</p>';
+              return;
+            }
+
+            let html = '';
+            reservas.forEach(r => {
+              html += `
+                <div class="resumen-linea">
+                  📌 <strong>${r.sala}</strong>: <strong>${r.usuario}</strong> (${r.horaInicio} - ${r.horaFin} hs)
+                </div>
+              `;
+            });
+            cont.innerHTML = html;
+          })
+          .obtenerTodasLasReservasDelDia(fecha);
+      }
+
+      function cerrarResumen() {
+        document.getElementById('modalResumen').style.display = 'none';
+      }
+
+      function cambiarVistaCalendario(modo) {
+        vistaCalendarioActual = modo;
+        document.getElementById('btnVistaDia').className = `view-btn ${modo === 'dia' ? 'active' : ''}`;
+        document.getElementById('btnVistaSemana').className = `view-btn ${modo === 'semana' ? 'active' : ''}`;
+        cargarCalendarioTimeline();
+      }
+
+      function cargarCalendarioTimeline() {
+        const fechaSelect = document.getElementById('fechaConsulta').value;
+
+        if (vistaCalendarioActual === 'dia') {
+          google.script.run
+            .withSuccessHandler(renderizarTimelineDia)
+            .obtenerTodasLasReservasDelDia(fechaSelect);
+        } else {
+          let partes = fechaSelect.split('-');
+          let dateObj = new Date(partes[0], partes[1] - 1, partes[2]);
+          let dayOfWeek = dateObj.getDay();
+          let diffToMonday = dateObj.getDate() - dayOfWeek + (dayOfWeek === 0 ? -6 : 1);
+
+          let monday = new Date(dateObj.setDate(diffToMonday));
+          let friday = new Date(monday);
+          friday.setDate(monday.getDate() + 4);
+
+          let lunStr = monday.getFullYear() + '-' + String(monday.getMonth() + 1).padStart(2, '0') + '-' + String(monday.getDate()).padStart(2, '0');
+          let vieStr = friday.getFullYear() + '-' + String(friday.getMonth() + 1).padStart(2, '0') + '-' + String(friday.getDate()).padStart(2, '0');
+
+          google.script.run
+            .withSuccessHandler(function(reservas) {
+              renderizarTimelineSemana(reservas, monday);
+            })
+            .obtenerReservasRango(lunStr, vieStr);
+        }
+      }
+
+      function horaAMinutosJs(horaStr) {
+        if (!horaStr) return 0;
+        let partes = String(horaStr).split(':');
+        let h = parseInt(partes[0], 10) || 0;
+        let m = parseInt(partes[1], 10) || 0;
+        return (h * 60) + m;
+      }
+
+      function renderizarTimelineDia(reservas) {
+        const cont = document.getElementById('timelineContainer');
+        const salas = ['Sala 1', 'Sala 2', 'Sala 3', 'Sala 4'];
+
+        let bloques = [];
+        for (let h = 10; h <= 18; h++) {
+          for (let m of ['00', '15', '30', '45']) {
+            if (h === 18 && m === '45') break;
+            bloques.push(`${h < 10 ? '0' + h : h}:${m}`);
+          }
+        }
+
+        let skipMatrix = {};
+        salas.forEach(s => skipMatrix[s] = 0);
+
+        let tableHtml = `<table class="timeline-table">
+          <thead>
+            <tr>
+              <th>Hora</th>
+              ${salas.map(s => `<th>${s}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>`;
+
+        bloques.forEach((horaLabel) => {
+          let minBloqueInicio = horaAMinutosJs(horaLabel);
+
+          tableHtml += `<tr><td class="hora-col">${horaLabel}</td>`;
+
+          salas.forEach(sala => {
+            if (skipMatrix[sala] > 0) {
+              skipMatrix[sala]--;
+              return;
+            }
+
+            let res = reservas.find(r => {
+              let minInicio = horaAMinutosJs(r.horaInicio);
+              return r.sala === sala && minInicio === minBloqueInicio;
+            });
+
+            if (res) {
+              let minInicio = horaAMinutosJs(res.horaInicio);
+              let minFin = horaAMinutosJs(res.horaFin);
+              let duracionMin = minFin - minInicio;
+              let spans = Math.max(1, Math.ceil(duracionMin / 15));
+
+              skipMatrix[sala] = spans - 1;
+
+              tableHtml += `<td rowspan="${spans}">
+                <div class="event-card-single">
+                  ${res.usuario}
+                  <small>${res.horaInicio}-${res.horaFin}</small>
+                </div>
+              </td>`;
+            } else {
+              tableHtml += `<td class="timeline-slot"></td>`;
+            }
+          });
+
+          tableHtml += `</tr>`;
+        });
+
+        tableHtml += `</tbody></table>`;
+        cont.innerHTML = tableHtml;
+      }
+
+      function renderizarTimelineSemana(reservas, mondayObj) {
+        const cont = document.getElementById('timelineContainer');
+        const diasNombre = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie'];
+        const salas = ['Sala 1', 'Sala 2', 'Sala 3', 'Sala 4'];
+
+        let fechasSemana = [];
+        for (let i = 0; i < 5; i++) {
+          let d = new Date(mondayObj);
+          d.setDate(mondayObj.getDate() + i);
+          let yyyy = d.getFullYear();
+          let mm = String(d.getMonth() + 1).padStart(2, '0');
+          let dd = String(d.getDate()).padStart(2, '0');
+          fechasSemana.push(`${yyyy}-${mm}-${dd}`);
+        }
+
+        let tableHtml = `<table class="timeline-table">
+          <thead>
+            <tr>
+              <th>Día</th>
+              ${salas.map(s => `<th>${s}</th>`).join('')}
+            </tr>
+          </thead>
+          <tbody>`;
+
+        fechasSemana.forEach((fStr, index) => {
+          tableHtml += `<tr><td class="hora-col">${diasNombre[index]}<br><span style="font-size:8px;">${fStr.substr(8,2)}/${fStr.substr(5,2)}</span></td>`;
+
+          salas.forEach(sala => {
+            let resDelDia = reservas.filter(r => r.sala === sala && r.fecha === fStr);
+
+            if (resDelDia.length > 0) {
+              let celdaContenido = resDelDia.map(r =>
+                `<div class="event-card-single" style="margin:2px 0; padding:2px;">
+                   ${r.usuario} <small>(${r.horaInicio}-${r.horaFin})</small>
+                 </div>`
+              ).join('');
+              tableHtml += `<td>${celdaContenido}</td>`;
+            } else {
+              tableHtml += `<td class="timeline-slot"></td>`;
+            }
+          });
+
+          tableHtml += `</tr>`;
+        });
+
+        tableHtml += `</tbody></table>`;
+        cont.innerHTML = tableHtml;
+      }
+
+      function abrirModal(sala) {
+        salaSeleccionada = sala;
+        const hora = document.getElementById('horaConsulta').value;
+        document.getElementById('modalTitulo').innerText = `Reservar ${sala} (${hora} hs)`;
+        document.getElementById('modalReserva').style.display = 'flex';
+      }
+
+      function cerrarModal() {
+        document.getElementById('modalReserva').style.display = 'none';
+        document.getElementById('nombrePersona').value = '';
+        document.getElementById('emailUsuario').value = '';
+        document.getElementById('invitadosExtra').value = '';
+        document.getElementById('invitadoInput').value = '';
+        invitados = [];
+        renderInvitados();
+        cerrarPanelCalendarios();
+        document.getElementById('motivoReserva').value = '';
+        document.getElementById('btnConfirmar').innerText = 'Confirmar';
+        document.getElementById('btnConfirmar').disabled = false;
+      }
+
+      function calcularHoraFin(horaInicioStr, minutosDuracion) {
+        let [h, m] = horaInicioStr.split(':').map(Number);
+        let date = new Date();
+        date.setHours(h, m + parseInt(minutosDuracion), 0);
+
+        let horaFin = date.getHours().toString().padStart(2, '0');
+        let minFin = date.getMinutes().toString().padStart(2, '0');
+        return `${horaFin}:${minFin}`;
+      }
+
+      function confirmarReserva() {
+        const pendiente = document.getElementById('invitadoInput').value.trim();
+        if (pendiente && !agregarInvitado(pendiente, true)) return;
+        const nombrePersona = document.getElementById('nombrePersona').value.trim();
+        const emailUsuario = document.getElementById('emailUsuario').value.trim();
+        const invitadosExtra = document.getElementById('invitadosExtra').value.trim();
+        const motivo = document.getElementById('motivoReserva').value.trim();
+        const fechaReserva = document.getElementById('fechaConsulta').value;
+        const horaInicio = document.getElementById('horaConsulta').value;
+        const duracion = document.getElementById('duracionReserva').value;
+
+        if (!nombrePersona || !motivo) {
+          alert('Por favor completa tu Nombre y el Motivo de la reunión.');
+          return;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailUsuario || !emailRegex.test(emailUsuario)) {
+          alert('Por favor ingresa un Email válido para poder enviarle la invitación de la reserva.');
+          return;
+        }
+
+        if (invitadosExtra) {
+          const invalidos = invitadosExtra.split(/[,;\s]+/).filter(x => x && !emailRegex.test(x));
+          if (invalidos.length) {
+            alert('Estos invitados no tienen un mail válido: ' + invalidos.join(', '));
+            return;
+          }
+        }
+
+        const horaFin = calcularHoraFin(horaInicio, duracion);
+        const btn = document.getElementById('btnConfirmar');
+        btn.innerText = 'Guardando...';
+        btn.disabled = true;
+
+        google.script.run
+          .withSuccessHandler(function(data) {
+            renderizarSalas(data);
+            cargarCalendarioTimeline();
+            cerrarModal();
+          })
+          .withFailureHandler(function(error) {
+            alert('Error al procesar reserva: ' + error.message);
+            btn.innerText = 'Confirmar';
+            btn.disabled = false;
+          })
+          .guardarReserva(salaSeleccionada, nombrePersona, emailUsuario, fechaReserva, horaInicio, horaFin, motivo, invitadosExtra);
+      }
+
+      function liberar(sala) {
+        const fecha = document.getElementById('fechaConsulta').value;
+        const hora = document.getElementById('horaConsulta').value;
+
+        if (confirm(`¿Seguro que deseas liberar la ${sala}?`)) {
+          google.script.run
+            .withSuccessHandler(function(data) {
+              renderizarSalas(data);
+              cargarCalendarioTimeline();
+            })
+            .liberarSala(sala, fecha, hora);
+        }
+      }
+
+      // ===== Directorio, invitados y vista previa de calendarios =====
+      let DIRECTORIO = [];
+      let invitados = [];
+      const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      function nombreDe(email) {
+        const p = DIRECTORIO.find(x => x.email === email);
+        return p && p.nombre ? p.nombre : email;
+      }
+
+      function cargarDirectorio() {
+        google.script.run
+          .withSuccessHandler(function(lista) {
+            DIRECTORIO = lista || [];
+            const dl = document.getElementById('listaPersonas');
+            dl.innerHTML = '';
+            DIRECTORIO.forEach(function(p) {
+              const o = document.createElement('option');
+              o.value = p.email;
+              if (p.nombre) o.label = p.nombre;
+              dl.appendChild(o);
+            });
+          })
+          .withFailureHandler(function() {})
+          .getDirectorio();
+      }
+
+      function inicializarEventosInvitados() {
+        const inpInv = document.getElementById('invitadoInput');
+        inpInv.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ',') {
+            e.preventDefault();
+            agregarInvitado(inpInv.value, false);
+          }
+        });
+        inpInv.addEventListener('change', function() {
+          if (inpInv.value.trim()) agregarInvitado(inpInv.value, true);
+        });
+
+        const inpEmail = document.getElementById('emailUsuario');
+        inpEmail.addEventListener('change', function() {
+          const val = inpEmail.value.trim().toLowerCase();
+          const inpNombre = document.getElementById('nombrePersona');
+          if (val && !inpNombre.value.trim()) {
+            const p = DIRECTORIO.find(x => x.email.toLowerCase() === val);
+            if (p && p.nombre) inpNombre.value = p.nombre;
+          }
+        });
+      }
+
+      function agregarInvitado(raw, silencioso) {
+        const partes = String(raw || '').split(/[,;\s]+/).filter(Boolean);
+        if (!partes.length) return true;
+
+        for (let mail of partes) {
+          mail = mail.toLowerCase();
+          if (!EMAIL_RE.test(mail)) {
+            if (!silencioso) alert('Ingresá un email válido: ' + mail);
+            return false;
+          }
+          if (!invitados.includes(mail)) {
+            invitados.push(mail);
+          }
+        }
+
+        document.getElementById('invitadoInput').value = '';
+        document.getElementById('invitadosExtra').value = invitados.join(', ');
+        renderInvitados();
+        if (document.getElementById('panelCalendarios').style.display === 'block') {
+          actualizarIframeCalendarios();
+        }
+        return true;
+      }
+
+      function quitarInvitado(mail) {
+        invitados = invitados.filter(x => x !== mail);
+        document.getElementById('invitadosExtra').value = invitados.join(', ');
+        renderInvitados();
+        if (document.getElementById('panelCalendarios').style.display === 'block') {
+          actualizarIframeCalendarios();
+        }
+      }
+
+      function renderInvitados() {
+        const cont = document.getElementById('chipsInvitados');
+        cont.innerHTML = invitados.map(mail =>
+          `<span class="chip">${nombreDe(mail)} <button type="button" onclick="quitarInvitado('${mail}')">&times;</button></span>`
+        ).join('');
+      }
+
+      function actualizarIframeCalendarios() {
+        const fecha = document.getElementById('fechaConsulta').value.replace(/-/g, '');
+        const organizador = document.getElementById('emailUsuario').value.trim();
+        const fuentes = [SALAS_CALENDAR_ID];
+        if (EMAIL_RE.test(organizador)) fuentes.push(organizador);
+        invitados.forEach(m => { if (!fuentes.includes(m)) fuentes.push(m); });
+
+        const params = fuentes.map(s => 'src=' + encodeURIComponent(s)).join('&');
+        const url = `https://calendar.google.com/calendar/embed?mode=DAY&showTitle=0&showPrint=0&showTabs=0&ctz=America%2FArgentina%2FBuenos_Aires&dates=${fecha}%2F${fecha}&${params}`;
+        document.getElementById('frameCalendarios').src = url;
+        document.getElementById('linkCalendarios').href = url;
+      }
+
+      function toggleCalendarios() {
+        const panel = document.getElementById('panelCalendarios');
+        const btn = document.getElementById('btnCalendarios');
+        if (panel.style.display === 'block') {
+          cerrarPanelCalendarios();
+        } else {
+          actualizarIframeCalendarios();
+          panel.style.display = 'block';
+          btn.innerText = 'Ocultar calendarios';
+        }
+      }
+
+      function cerrarPanelCalendarios() {
+        document.getElementById('panelCalendarios').style.display = 'none';
+        document.getElementById('btnCalendarios').innerText = 'Ver calendarios';
+      }
+    </script>
+  </body>
+</html>
